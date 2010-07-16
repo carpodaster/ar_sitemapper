@@ -1,0 +1,79 @@
+== ActiveRecord Sitemapper
+=== Low-level sitemap-building
+
+The standard approach to generate XML sitemaps for a Ruby on Rails application
+seems to be creating a special SitemapsController with rxml views and a bit
+of routes.rb magic.
+
+I used to generate sitemaps created thus via a nightly rake task to have them
+cached and delivered statically by Apache. That felt wrong, I wanted a more
+"low-level" approach. Actually, as low-level as possible and I ended up at
+ActiveRecord::Base: this plugin enhances your ActiveRecord model to export 
+its data to a sitemap in an intuitive way.
+
+Also yes, I know there are probably a gazillion projects covering this already.
+
+== Installation
+
+To add *ar_sitemapper* to your Rails project, type
+
+  $ ruby script/plugin install git://github.com/carpodaster/ar_sitemapper.git
+
+== Usage
+
+=== ActiveRecord drop-in
+
+You can use +build_sitemap+ directly on any ActiveRecord model, e.g.:
+
+  Content.build_sitemap :all do |content, xml|
+    xml.loc content_url(content)
+    xml.changefreq 'weekly'
+    xml.lastmod content.updated_at.strftime("%Y-%m-%d")
+    xml.priority 0.5
+  end
+
+You can pass ActiveRecord::Base.find options as arguments to +build_sitemap+
+to fine-tune the selection of objects you want to extract:
+
+  Post.build_sitemap :all, :conditions => ["published IS TRUE"], :order => :name do |post, xml|
+    # do stuff here
+  end
+
+Note: if you want to use your named route helpers in the block, be sure to have
+ActionController::UrlWriter included. Setting default_url_options[:host]
+is helpful, too.
+
+=== Output
+
+*ar_sitemapper* only writes to +$stdout+ by default unless a :filename is supplied
+as an argument. It will automatically compress your XML sitemap with gzip(1) if the
+filename parameter suggests it (ie. ends with ".gz"). Alternatively, you can
+pass :gzip => true as an option.
+
+Both of the following examples will create a gzip'ed file named "test.xml.gz":
+
+  Content.build_sitemap :all, :filename => "test.xml.gz" { |content, xml| ... }
+  Content.build_sitemap :all, :filename => "test.xml", :gzip => true { |content, xml| ... }
+
+=== Sitemaps for static data
+
+Sitemap creation is done via a block, so you can do whatever you want in it.
+For added flexibility, you can use *ar_sitemapper* with arbitrary data
+collections (ie. generating sitemaps for static content). Future versions will
+support YAML configuration of such static content.
+
+  sites = [
+    { :url => "http://example.com/your/static/content1.html", :freq => "always",  :prio => "1.0" },
+    { :url => "http://example.com/your/static/content2.html", :freq => "monthly", :prio => "0.3" },
+  ]
+
+  AegisNet::Sitemapper::Generator.create(sites) do |site, xml|
+    xml.loc site[:url]
+    xml.changefreq site[:freq]
+    xml.priority site[:prio]
+  end
+
+
+---
+
+Copyright (c) 2010 Carsten Zimmermann, released under a BSD-type license
