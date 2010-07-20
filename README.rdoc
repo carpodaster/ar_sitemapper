@@ -23,7 +23,8 @@ To add *ar_sitemapper* to your Rails project, type
 
 === ActiveRecord drop-in
 
-You can use +build_sitemap+ directly on any ActiveRecord model, e.g.:
+You can use +build_sitemap+ directly on any ActiveRecord model. The following
+example will create a sitemap of all your Content objects as RAILS_ROOT/public/sitemap_contents.xml.gz:
 
   Content.build_sitemap :all do |content, xml|
     xml.loc content_url(content)
@@ -39,21 +40,24 @@ to fine-tune the selection of objects you want to extract:
     # do stuff here
   end
 
-Note: if you want to use your named route helpers in the block, be sure to have
+*Note*: if you want to use your named route helpers in the block, be sure to have
 ActionController::UrlWriter included. Setting default_url_options[:host]
 is helpful, too.
 
 === Output
 
-*ar_sitemapper* only writes to +$stdout+ by default unless a :filename is supplied
-as an argument. It will automatically compress your XML sitemap with gzip(1) if the
+*ar_sitemapper* will derive its sitemap filename from the model's name and will
+default to Gzip compressed output. If can write to +stdout+ as well if +:file+
+is explicitely set to +nil+ or +false+.
+
+It will automatically compress your XML sitemap with gzip(1) if the
 filename parameter suggests it (ie. ends with ".gz"). Alternatively, you can
-pass :gzip => true as an option.
+enforce or disable Gzip compression by passing true or false to the +:gzip+ option.
 
 Both of the following examples will create a gzip'ed file named "test.xml.gz":
 
-  Content.build_sitemap :all, :filename => "test.xml.gz" { |content, xml| ... }
-  Content.build_sitemap :all, :filename => "test.xml", :gzip => true { |content, xml| ... }
+  Content.build_sitemap :all, :file => "test.xml.gz" { |content, xml| ... }
+  Content.build_sitemap :all, :file => "test.xml", :gzip => true { |content, xml| ... }
 
 === Sitemaps for static data
 
