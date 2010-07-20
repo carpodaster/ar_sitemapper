@@ -47,12 +47,12 @@ is helpful, too.
 === Output
 
 *ar_sitemapper* will derive its sitemap filename from the model's name and will
-default to Gzip compressed output. If can write to +stdout+ as well if +:file+
+default to Gzip compressed output. If can write to +stdout+ as well if +file+
 is explicitely set to +nil+ or +false+.
 
-It will automatically compress your XML sitemap with gzip(1) if the
+It will automatically compress your XML sitemap with Gzip if the
 filename parameter suggests it (ie. ends with ".gz"). Alternatively, you can
-enforce or disable Gzip compression by passing true or false to the +:gzip+ option.
+enforce or disable Gzip compression by passing true or false to the +gzip+ option.
 
 Both of the following examples will create a gzip'ed file named "test.xml.gz":
 

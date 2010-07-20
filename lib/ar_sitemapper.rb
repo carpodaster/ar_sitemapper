@@ -109,5 +109,20 @@ module AegisNet
       end
     end
 
+    class Map
+      attr_reader :changefreq, :loc, :priority
+
+      def initialize(options = {})
+        options.assert_valid_keys(:changefreq, :loc, :priority)
+        @changefreq = options[:changefreq] || "weekly"
+        @loc        = options[:loc]
+        @priority   = options[:priority] || 0.5
+      end
+
+      def changefreq(freq); @changefreq = freq; end
+      def loc(loc); @loc = loc; end
+      def priority(prio); @priority = prio; end
+    end
+
   end
 end
