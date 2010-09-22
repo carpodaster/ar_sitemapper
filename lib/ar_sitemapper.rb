@@ -1,3 +1,5 @@
+require 'sitemapper/loader'
+
 module AegisNet
   module Sitemapper
 
@@ -7,7 +9,6 @@ module AegisNet
       end
 
       module SingletonMethods
-
         # Adds sitemap building functionality to ActiveRecord models.
         #
         # The option +:filename+ is derived from the model name and will be set to
@@ -38,9 +39,9 @@ module AegisNet
 
           find_options = options.reject{|pair| !valid_find_options.include?(pair.first) }
           sitemap_opts = options.delete_if{|k, v| find_options.keys.include?(k)}
-          
+
           # Extra treatment for the filename option
-          sitemap_options[:file] = sitemap_options.keys.include?(:file) ? sitemap_options[:file] : File.join(RAILS_ROOT, "public", "sitemap_#{self.class.to_s.underscore.pluralize}.xml.gz")
+          sitemap_opts[:file] = sitemap_opts.keys.include?(:file) ? sitemap_opts[:file] : AegisNet::Sitemapper::Generator.default_filename(self.class)
 
           entries = self.find(finder, find_options).to_a # get an array for :first and :last, too
           AegisNet::Sitemapper::Generator.create(entries, sitemap_opts) { |entry, xml|  yield entry, xml }
@@ -91,37 +92,24 @@ module AegisNet
           xml.instruct!
           xml.urlset "xmlns" => xmlns do
             entries.each do |entry|
-              xml.url { yield entry, xml }
+              xml.url { yield entry, xml } rescue nil # TODO handle me / pass upwards
             end
           end
 
           # Either write to file or to stdout
           if filename
-            if gzip
-              Zlib::GzipWriter.open {|gz| gz.write xml.target! }
-            else
-              File.open(filename, "w") { |file| file.puts xml.target! }
-            end
+            File.open(filename, "w") { |file| file.puts xml.target! }
+            Zlib::GzipWriter.open("#{filename}.gz") {|gz| gz.write xml.target! } if gzip
           else
             $stdout.puts xml.target!
           end
         end
       end
-    end
 
-    class Map
-      attr_reader :changefreq, :loc, :priority
-
-      def initialize(options = {})
-        options.assert_valid_keys(:changefreq, :loc, :priority)
-        @changefreq = options[:changefreq] || "weekly"
-        @loc        = options[:loc]
-        @priority   = options[:priority] || 0.5
+      def self.default_filename(klass)
+        File.join(RAILS_ROOT, "public", "sitemap_#{klass.to_s.underscore.pluralize}.xml.gz")
       end
 
-      def changefreq(freq); @changefreq = freq; end
-      def loc(loc); @loc = loc; end
-      def priority(prio); @priority = prio; end
     end
 
   end
