@@ -1,7 +1,7 @@
 module AegisNet # :nodoc:
   module Sitemapper # :nodoc:
     # :doc:
-    
+
    class Urlset < AegisNet::Sitemapper::Sitemap
 
       def create!
@@ -43,7 +43,11 @@ module AegisNet # :nodoc:
             build_opts.merge!( :conditions => opts["conditions"])  if opts["conditions"]
 
             klass.build_sitemap :all, build_opts do |object, xml|
-              xml.loc        eval(opts["loc"].gsub(/^eval:/, '').gsub(/:object/, "object"))
+              if opts["loc"].starts_with?("Proc")
+                xml.loc AegisNet::Sitemapper::Loader.proc_loader(opts["loc"], object)
+              else
+                xml.loc opts["loc"]
+              end
               xml.lastmod    object.updated_at.to_date
               xml.changefreq opts["changefreq"] || "weekly"
               xml.priority   opts["priority"] || 0.5

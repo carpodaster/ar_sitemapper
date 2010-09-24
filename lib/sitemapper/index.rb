@@ -1,7 +1,7 @@
 module AegisNet # :nodoc:
   module Sitemapper # :nodoc:
     # :doc:
-    
+
     class Index
 
       attr_reader :host, :sitemaps
@@ -14,8 +14,9 @@ module AegisNet # :nodoc:
         @host   = @config[:default_host]
         @file   = File.join("#{@config[:local_path]}", @config[:index]["sitemapfile"])
 
-        @static = @config[:static]
-        @models = @config[:models]
+        @static   = @config[:static]
+        @models   = @config[:models]
+        @includes = @config[:index]["includes"]
 
         # Validate all variables
         raise(ArgumentError, "No filename specified") if @file.nil?
@@ -26,8 +27,16 @@ module AegisNet # :nodoc:
           @sitemaps << AegisNet::Sitemapper::Urlset.new(sitemap_options)
         end
 
+        # Include additional sitemaps
+        @includes.each do |sitemap|
+          sitemap_options = {:loc => sitemap["loc"], :lastmod => sitemap["lastmod"]}
+          @sitemaps << AegisNet::Sitemapper::Sitemap.new(sitemap_options)
+        end
+
         @models.each do |sitemap|
-          lastmod = sitemap.last["lastmod"] || sitemap.first.camelize.constantize.find(:last, :order => :updated_at).updated_at
+          order_opts = {}
+          order_opts = { :order => :created_at } if sitemap.first.camelize.constantize.column_names.include?("created_at")
+          lastmod = sitemap.last["lastmod"] || sitemap.first.camelize.constantize.last(order_opts).created_at
           sitemap_options = {:loc => sitemap.last["sitemapfile"], :lastmod => lastmod}
           @sitemaps << AegisNet::Sitemapper::Urlset.new(sitemap_options)
         end
@@ -56,6 +65,6 @@ module AegisNet # :nodoc:
         File.open(@file, "w") { |file| file.puts xml.target! }
       end
     end
-    
+
   end
 end

@@ -1,0 +1,17 @@
+== CHANGELOG
+
+=== v0.4 // 2010-09-24
+* supports Proc code in sitemap yaml for dynamic url generation based on model iteration
+* additional files can now be added to the sitemap index file.
+* last-modified for models' sitemaps within the sitemap index file is now based on :created_at when a corresponding column is found
+* added barebone fake app for running tests
+
+=== v0.3 // 2010-09-22
+* classes restructured
+
+=== v0.3 // 2010-07-20
+* added Map class
+* filename will be auto-derived by modelname by default now
+
+=== v0.1 // 2010-07-16
+* Initial version

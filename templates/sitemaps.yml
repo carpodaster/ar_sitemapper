@@ -1,0 +1,33 @@
+default_host: "www.example.com"
+local_path: <%= File.join RAILS_ROOT, "public", "sitemaps" %>
+ping: true
+
+index:
+  sitemapfile: "sitemap_index.xml"
+  includes:
+    -
+      loc: foo_sitemap.xml
+static:
+  sitemapfile: "sitemapfoobar.xml.gz"
+  urlset:
+    -
+      loc: "http://www.example.com/static/page"
+      changefreq: weekly
+      priority: 0.1
+    -
+      loc: "http://www.example.com/important/static/page"
+      changefreq: daily
+      priority: 1.0
+
+models:
+  foo_bar:
+    sitemapfile: sitemap_foo_bars.xml.gz
+    loc: "eval:foo_bar_url(:object)"
+    changefreq: weekly
+    priority: 0.7
+
+pings:
+  - http://submissions.ask.com/ping?sitemap=
+  - http://www.google.com/webmasters/sitemaps/ping?sitemap=
+  - http://search.yahooapis.com/SiteExplorerService/V1/updateNotification?appid=YahooDemo&url=
+  - http://www.bing.com/webmaster/ping.aspx?siteMap

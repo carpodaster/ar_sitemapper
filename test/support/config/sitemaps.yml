@@ -1,0 +1,36 @@
+default_host: "www.example.com"
+local_path: <%= File.join RAILS_ROOT, "public", "sitemaps" %>
+ping: true
+
+
+index:
+  sitemapfile: "sitemap_index.xml"
+  includes:
+    -
+      loc: foo_sitemap.xml
+static:
+  sitemapfile: "sitemapfoobar.xml.gz"
+  urlset:
+    -
+      loc: "http://www.example.com/static/page"
+      changefreq: weekly
+      priority: 0.1
+    -
+      loc: "http://www.example.com/important/static/page"
+      changefreq: daily
+      priority: 1.0
+
+models:
+  foo_bar:
+    sitemapfile: sitemap_foo_bars.xml.gz
+    loc: "eval:administrative_district_url(:object)"
+    changefreq: weekly
+    priority: 0.7
+  foo_bar:
+    sitemapfile: sitemap_proctests.xml.gz
+    loc: Proc.new {|object| proctest_path(object)
+    changefreq: weekly
+    priority: 0.8
+
+pings:
+  - http://ping.example.com/ping?sitemap=

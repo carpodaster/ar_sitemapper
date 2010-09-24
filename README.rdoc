@@ -77,6 +77,10 @@ support YAML configuration of such static content.
     xml.priority site[:prio]
   end
 
+== .plan
+* support KML files
+* allow for a custom iterator supplied as Proc for Generator::create (ie. to make use of ARs batch finding)
+* cleanup
 
 ---
 
