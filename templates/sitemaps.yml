@@ -22,7 +22,7 @@ static:
 models:
   foo_bar:
     sitemapfile: sitemap_foo_bars.xml.gz
-    loc: "eval:foo_bar_url(:object)"
+    loc: Proc.new {|o| foo_bar_url(o) }
     changefreq: weekly
     priority: 0.7
 
