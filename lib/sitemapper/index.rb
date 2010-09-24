@@ -1,4 +1,5 @@
 module AegisNet # :nodoc:
+module AegisNet # :nodoc:
   module Sitemapper # :nodoc:
     # :doc:
 
@@ -29,7 +30,8 @@ module AegisNet # :nodoc:
 
         # Include additional sitemaps
         @includes.each do |sitemap|
-          sitemap_options = {:loc => sitemap["loc"], :lastmod => sitemap["lastmod"]}
+          sitemap_options = {:loc => sitemap["loc"] }
+          sitemap_options.merge!(:lastmod => sitemap["lastmod"]) if sitemap["lastmod"]
           @sitemaps << AegisNet::Sitemapper::Sitemap.new(sitemap_options)
         end
 
@@ -58,7 +60,7 @@ module AegisNet # :nodoc:
             location = sitemap.loc.gsub(/^\//, '')
             xml.sitemap do
               xml.loc         "http://#{@host}/#{location}"
-              xml.lastmod     sitemap.lastmod.to_date if sitemap.lastmod
+              xml.lastmod     sitemap.lastmod.to_date if sitemap.lastmod rescue nil # TODO handle properly
             end
           end
         end
