@@ -1,5 +1,4 @@
 module AegisNet # :nodoc:
-module AegisNet # :nodoc:
   module Sitemapper # :nodoc:
     # :doc:
 
