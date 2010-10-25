@@ -77,10 +77,118 @@ support YAML configuration of such static content.
     xml.priority site[:prio]
   end
 
+=== YAML configuration
+Sitemapper supports configuration via a YAML file which is expected to reside in
+<tt>RAILS_ROOT/config/sitemaps.yml</tt>.
+
+==== Supported top level configuration options
+* +default_host+: base hostname used for url generation (mandatory).
+* +local_path+: where to store the generated sitemaps on the local system (mandatory).
+* +ping+: boolean whether or not to ping search engines on successful sitemap generation.
+* +index+: options for the main sitemap index file, ie. the file that references all others.
+* +static+: options for the sitemap that lists URLs to static content (ie. URLs not
+  necessarily related to AR models)
+* +models+: options for model-related URLset sitemaps
+* +ping+: a list of search engines' ping services.
+
+==== The <tt>index</tt> option
+* +sitemapfile+: the name of the the generated sitemap.
+* +includes+: an array of sitemaps that should be included in the sitemap index but
+  are _not_ generated directly through AR:Sitemapper (eg. a KML-sitemap).
+
+==== The <tt>static</tt> option
+* +sitemapfile+: the name of the the generated sitemap.
+* +urlset+: a list of static pages to include into the sitemap. Every item must
+  have a +loc+ element. A +changefreq+ and +priority+ element is optional and
+  defaults to _weekly_ and <i>0.5</i>, respectively.
+
+==== The <tt>model</tt> option
+A list of models to create sitemaps for. The key must be the downcased und
+underscored name of the model. Supported / required options for every model-based
+sitemap are:
+* +sitemapfile+: the name of the the generated sitemap (mandatory).
+* +loc+: a Proc definition to generate the URLs for each object with (mandatory).
+* +changefreq+: optional, defaults to 'weekly'
+* +priority+: optional, defaults to '0.5'
+* +lastmod+: you can use ERB to insert the date you desire.
+* +conditions+: conditions to be merged into the finder of +build_sitemap+ (optional).
+* +scope+: a named scope to find objects with
+
+==== Sample YAML file
+
+  default_host: "www.example.com"
+  local_path: <%= File.join RAILS_ROOT, "public", "sitemaps" %>
+  ping: true
+  index:
+    sitemapfile: "sitemap_index.xml"
+    includes:
+      -
+        loc: some_other_sitemap.xml
+  static:
+    sitemapfile: "sitemap_static.xml.gz"
+    urlset:
+      -
+        loc: "http://www.example.com/static/content"
+        changefreq: weekly
+        priority: 1.0
+      -
+        loc: "http://www.example.com/another/page"
+        changefreq: weekly
+        priority: 1.0
+  models:
+    foo_bar:
+      sitemapfile: sitemap_foo_bars.xml.gz
+      lastmod: <%= 2.days.ago %>
+      loc: Proc.new {|object| foo_bar_path(object) }
+      changefreq: weekly
+      priority: 0.7
+      conditions: "foo > 1"
+    acme:
+      sitemapfile: sitemap_proctests.xml.gz
+      scope: liquid
+      lastmod: <%= Acme.find(:last, :order => :updated_at).updated_at %>
+      loc: Proc.new {|object| acme_path(object) }
+      changefreq: weekly
+      priority: 0.8
+  pings:
+    - http://submissions.ask.com/ping?sitemap=
+    - http://www.google.com/webmasters/sitemaps/ping?sitemap=
+    - http://search.yahooapis.com/SiteExplorerService/V1/updateNotification?appid=YahooDemo&url=
+    - http://www.bing.com/webmaster/ping.aspx?siteMap=
+
+
+=== Rake task
+This is a simple rake task that loads and builds sitemaps from config/sitemaps.yml
+
+  namespace :sitemapper do
+    desc "Rebuilds all sitemaps"
+    task :rebuild => [:environment, :build_from_config, :ping]
+
+    desc "Rebuild everything from config/sitemapper.yml"
+    task :build_from_config => :environment do
+      include ActionController::UrlWriter
+      config = AegisNet::Sitemapper::Loader.load_config
+      default_url_options[:host] = config["default_host"]
+
+      ActiveRecord::Migration.say_with_time "Rebuilding sitemaps from config/sitemapper.yml" do
+        AegisNet::Sitemapper::Urlset.build_all!
+        AegisNet::Sitemapper::Index.create!
+      end
+    end
+
+    desc "Notifies search-engines about the index-sitemap"
+    task :ping => :environment do
+      AegisNet::Sitemapper::Pinger.ping!
+    end
+  end
+
 == .plan
 * support KML files
 * allow for a custom iterator supplied as Proc for Generator::create (ie. to make use of ARs batch finding)
 * cleanup
+* more flexible syntax for conditions in yml file
+* guess RESTful object path and make Proc object for loc in models optional
+* Rails 3 support
 
 ---
 

@@ -21,6 +21,7 @@ static:
 
 models:
   foo_bar:
+    conditions: "foo = bar"
     sitemapfile: sitemap_foo_bars.xml.gz
     loc: Proc.new {|o| foo_bar_url(o) }
     changefreq: weekly

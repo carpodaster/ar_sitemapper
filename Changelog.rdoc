@@ -1,5 +1,9 @@
 == CHANGELOG
 
+=== v0.5 // 2010-10-25
+* supports conditions and named scopes for build_sitemap via YML file
+* documentation and samples
+
 === v0.4 // 2010-09-24
 * supports Proc code in sitemap yaml for dynamic url generation based on model iteration
 * additional files can now be added to the sitemap index file.

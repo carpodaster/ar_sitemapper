@@ -30,6 +30,7 @@ module AegisNet # :nodoc:
         sitemap.create!
       end
 
+      # Generate Urlset sitemaps listed in sitemaps.yml
       def self.build_all!
         config = AegisNet::Sitemapper::Loader.load_config
 
@@ -42,7 +43,9 @@ module AegisNet # :nodoc:
             build_opts = { :file => File.join("#{config[:local_path]}", opts["sitemapfile"]) }
             build_opts.merge!( :conditions => opts["conditions"])  if opts["conditions"]
 
-            klass.build_sitemap :all, build_opts do |object, xml|
+            scope = opts["scope"].present? ? "#{opts["scope"]}" : :all
+
+            klass.build_sitemap scope, build_opts do |object, xml|
               if opts["loc"].starts_with?("Proc")
                 xml.loc AegisNet::Sitemapper::Loader.proc_loader(opts["loc"], object)
               else

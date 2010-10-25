@@ -17,7 +17,7 @@ module AegisNet
         # guessed (ie. if you want output to stdout).
         #
         # === Parameters
-        # * +finder+: one of :all, :first or :last
+        # * +scope+: :all, :first, :last or a named scope
         # * +options+: a Hash with options to pass to ActiveRecord::Base.find and AegisNet::Sitemapper::Generator
         #
         # === Supported Options
@@ -30,8 +30,9 @@ module AegisNet
         #    xml.priority 0.5
         #  end
         #
-        def build_sitemap finder, options = {}
-          raise(ArgumentError, "Unknown ActiveRecord finder: #{finder}") unless [:all, :first, :last].include?(finder.to_sym)
+        def build_sitemap scope, options = {}
+          scope = scope.to_sym
+          raise(ArgumentError, "Unknown ActiveRecord finder: #{scope}") unless self.respond_to?(scope)
           valid_find_options = [ :conditions, :include, :joins, :limit, :offset,
                                  :order, :select, :group, :having, :from ]
           options = options.symbolize_keys!
@@ -43,7 +44,7 @@ module AegisNet
           # Extra treatment for the filename option
           sitemap_opts[:file] = sitemap_opts.keys.include?(:file) ? sitemap_opts[:file] : AegisNet::Sitemapper::Generator.default_filename(self.class)
 
-          entries = self.find(finder, find_options).to_a # get an array for :first and :last, too
+          entries = self.send(scope, find_options).to_a # get an array for :first and :last, too
           AegisNet::Sitemapper::Generator.create(entries, sitemap_opts) { |entry, xml|  yield entry, xml }
         end
       end
