@@ -3,7 +3,7 @@ require File.join File.dirname(__FILE__), '..', 'test_helper'
 class LoaderTest < Test::Unit::TestCase
 
   def test_should_return_default_config_path
-    assert_equal "#{RAILS_ROOT}/config/sitemaps.yml", AegisNet::Sitemapper::Loader::CONFIG_FILE
+    assert_equal "#{Rails.root}/config/sitemaps.yml", AegisNet::Sitemapper::Loader::CONFIG_FILE
   end
 
   def test_should_load_default_config

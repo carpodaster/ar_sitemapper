@@ -12,7 +12,7 @@ module AegisNet
         # Adds sitemap building functionality to ActiveRecord models.
         #
         # The option +:filename+ is derived from the model name and will be set to
-        # RAILS_ROOT/public/sitemap_modelnames.xml.gz by default. Set +:filename+
+        # Rails.root/public/sitemap_modelnames.xml.gz by default. Set +:filename+
         # to +nil+ or +false+ explicitely if you don't want the filename to be
         # guessed (ie. if you want output to stdout).
         #

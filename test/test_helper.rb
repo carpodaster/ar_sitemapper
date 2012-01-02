@@ -1,5 +1,8 @@
-RAILS_ROOT = File.join(File.dirname(__FILE__), 'support')
-puts RAILS_ROOT
+class Rails
+	def self.root
+		File.join(File.dirname(__FILE__), 'support')
+	end
+end
 
 require 'test/unit'
 require 'rubygems'

@@ -24,7 +24,7 @@ To add *ar_sitemapper* to your Rails project, type
 === ActiveRecord drop-in
 
 You can use +build_sitemap+ directly on any ActiveRecord model. The following
-example will create a sitemap of all your Content objects as RAILS_ROOT/public/sitemap_contents.xml.gz:
+example will create a sitemap of all your Content objects as Rails.root/public/sitemap_contents.xml.gz:
 
   Content.build_sitemap :all do |content, xml|
     xml.loc content_url(content)
@@ -79,7 +79,7 @@ support YAML configuration of such static content.
 
 === YAML configuration
 Sitemapper supports configuration via a YAML file which is expected to reside in
-<tt>RAILS_ROOT/config/sitemaps.yml</tt>.
+<tt>Rails.root/config/sitemaps.yml</tt>.
 
 ==== Supported top level configuration options
 * +default_host+: base hostname used for url generation (mandatory).
@@ -117,7 +117,7 @@ sitemap are:
 ==== Sample YAML file
 
   default_host: "www.example.com"
-  local_path: <%= File.join RAILS_ROOT, "public", "sitemaps" %>
+  local_path: <%= File.join Rails.root, "public", "sitemaps" %>
   ping: true
   index:
     sitemapfile: "sitemap_index.xml"

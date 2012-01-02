@@ -1,13 +1,12 @@
-#default_host: "www.example.com"
-#local_path: <%= File.join RAILS_ROOT, "public", "sitemaps" %>
-#ping: true
-#
-#
-#index:
-#  sitemapfile: "sitemap_index.xml"
-#  includes:
-#    -
-#      loc: foo_sitemap.xml
+default_host: "www.example.com"
+local_path: <%= File.join Rails.root, "public", "sitemaps" %>
+ping: true
+
+index:
+  sitemapfile: "sitemap_index.xml"
+  includes:
+    -
+      loc: foo_sitemap.xml
 #static:
 #  sitemapfile: "sitemapfoobar.xml.gz"
 #  urlset:
@@ -20,18 +19,18 @@
 #      changefreq: daily
 #      priority: 1.0
 #
-#models:
-#  foo_bar:
+models:
+  foo_bar:
 #    conditions: "foo = 'bar'"
 #    sitemapfile: sitemap_foo_bars.xml.gz
 #    loc: Proc.new {|object| foo_bar_path(object) }
 #    changefreq: weekly
-#    priority: 0.7
+    priority: 0.7
 #  acme:
 #    sitemapfile: sitemap_acmes.xml.gz
 #    loc: Proc.new {|object| acme_path(object) }
 #    changefreq: weekly
 #    priority: 0.8
 #
-#pings:
-#  - http://ping.example.com/ping?sitemap=
+pings:
+  - http://ping.example.com/ping?sitemap=
