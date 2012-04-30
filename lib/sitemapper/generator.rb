@@ -39,21 +39,8 @@ module AegisNet
           gzip     = options[:gzip]  ||  /\.gz$/.match(options[:file])
           filename = options[:file] ? options[:file].gsub(/\.gz$/, '') : nil
 
-          xml = Builder::XmlMarkup.new(:indent => 2)
-          xml.instruct!
-          xml.urlset "xmlns" => xmlns do
-            entries.each do |entry|
-              xml.url { yield entry, xml } rescue nil # TODO handle me / pass upwards
-            end
-          end
 
-          # Either write to file or to stdout
-          if filename
-            File.open(filename, "w") { |file| file.puts xml.target! }
-            Zlib::GzipWriter.open("#{filename}.gz") {|gz| gz.write xml.target! } if gzip
-          else
-            $stdout.puts xml.target!
-          end
+            create_one_sitemap(entries, xmlns, filename, gzip)
         end
       end
 
@@ -66,6 +53,39 @@ module AegisNet
         File.join(config[:local_path], "sitemap_#{klass.to_s.underscore.pluralize}.xml.gz") if config[:local_path]
       end
 
+      def self.create_necessary_directories(filename)
+        FileUtils.mkpath( File.dirname(filename) )
+      end
+
+      def self.create_one_sitemap(entries, xmlns, filename, gzip)
+        write_one_sitemap(
+          generate_one_sitemap(entries, xmlns),
+          filename,
+          gzip
+        )
+      end
+
+      def self.generate_one_sitemap(entries, xmlns)
+        xml = Builder::XmlMarkup.new(:indent => 2)
+        xml.instruct!
+        xml.urlset "xmlns" => xmlns do
+          entries.each do |entry|
+            xml.url { yield entry, xml } rescue nil # TODO handle me / pass upwards
+          end
+        end
+        xml
+      end
+
+      def self.write_one_sitemap(xml, filename, gzip)
+        # Either write to file or to stdout
+        if filename
+          create_necessary_directories(filename)
+          File.open(filename, "w") { |file| file.puts xml.target! }
+          Zlib::GzipWriter.open("#{filename}.gz") {|gz| gz.write xml.target! } if gzip
+        else
+          $stdout.puts xml.target!
+        end
+      end
     end
   end
 end
