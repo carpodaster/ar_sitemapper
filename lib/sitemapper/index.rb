@@ -35,13 +35,26 @@ module AegisNet # :nodoc:
         end
 
         @models.each do |sitemap|
-          order_opts = {}
-          order_opts = { :order => :created_at } if sitemap.first.camelize.constantize.column_names.include?("created_at")
-          lastmod = sitemap.last["lastmod"] || sitemap.first.camelize.constantize.last(order_opts).created_at
-          sitemap_options = {:loc => sitemap.last["sitemapfile"], :lastmod => lastmod}
-          @sitemaps << AegisNet::Sitemapper::Urlset.new(sitemap_options)
-        end
+          klass = sitemap.first.camelize.constantize
+          count = klass.count
 
+          order_opts = {}
+          order_opts = { :order => :created_at } if klass.column_names.include?("created_at")
+          lastmod = sitemap.last["lastmod"] || klass.last(order_opts).created_at
+
+          if count <= 50_000
+            sitemap_options = {:loc => sitemap.last["sitemapfile"], :lastmod => lastmod}
+            @sitemaps << AegisNet::Sitemapper::Urlset.new(sitemap_options)
+          else
+            1.upto( (count / 50_000.0).ceil ) do |part_number|
+              sitemap_options = {
+                :loc => sitemap.last["sitemapfile"].gsub("xml", "#{part_number}.xml"),
+                :lastmod => lastmod
+              }
+              @sitemaps << AegisNet::Sitemapper::Urlset.new(sitemap_options)
+            end
+          end
+        end
       end
 
       def self.create!(options = {})
