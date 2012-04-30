@@ -79,7 +79,7 @@ module AegisNet
         xml.instruct!
         xml.urlset "xmlns" => xmlns do
           entries.each do |entry|
-            xml.url { block.call(entry, xml) } # rescue nil # TODO handle me / pass upwards
+            xml.url { block.call(entry, xml) } rescue nil # TODO handle me / pass upwards
           end
         end
         xml
