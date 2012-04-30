@@ -31,7 +31,7 @@ module AegisNet
       #    xml.priority site[:prio]
       #  end
       #
-      def self.create entries, options = {}
+      def self.create entries, options = {}, &block
         if block_given?
           options.symbolize_keys!
           options.assert_valid_keys(VALID_GENERATOR_OPTIONS)
@@ -39,8 +39,17 @@ module AegisNet
           gzip     = options[:gzip]  ||  /\.gz$/.match(options[:file])
           filename = options[:file] ? options[:file].gsub(/\.gz$/, '') : nil
 
+          if entries.size > 50_000
+            part_number = 0
+            entries.each_slice(50_000) do |part|
+              part_number = part_number.next
+              part_fn = filename.gsub('.xml', ".#{part_number}.xml")
 
-            create_one_sitemap(entries, xmlns, filename, gzip)
+              create_one_sitemap(part, xmlns, part_fn, gzip, &block)
+            end
+          else
+            create_one_sitemap(entries, xmlns, filename, gzip, &block)
+          end
         end
       end
 
@@ -57,20 +66,20 @@ module AegisNet
         FileUtils.mkpath( File.dirname(filename) )
       end
 
-      def self.create_one_sitemap(entries, xmlns, filename, gzip)
+      def self.create_one_sitemap(entries, xmlns, filename, gzip, &block)
         write_one_sitemap(
-          generate_one_sitemap(entries, xmlns),
+          generate_one_sitemap(entries, xmlns, &block),
           filename,
           gzip
         )
       end
 
-      def self.generate_one_sitemap(entries, xmlns)
+      def self.generate_one_sitemap(entries, xmlns, &block)
         xml = Builder::XmlMarkup.new(:indent => 2)
         xml.instruct!
         xml.urlset "xmlns" => xmlns do
           entries.each do |entry|
-            xml.url { yield entry, xml } rescue nil # TODO handle me / pass upwards
+            xml.url { block.call(entry, xml) } # rescue nil # TODO handle me / pass upwards
           end
         end
         xml
