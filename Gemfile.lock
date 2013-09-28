@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ar_sitemapper (0.7)
+    ar_sitemapper (1.0.0)
       activesupport (>= 3.0, < 4.0)
 
 GEM
