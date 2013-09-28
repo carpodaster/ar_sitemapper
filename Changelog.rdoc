@@ -1,5 +1,12 @@
 == CHANGELOG
 
+=== v1.0.0 // 2013-09-28
+* Transformed into a gem (just for sport)
+* Removed Rails 2'ism
+* Splits sitemaps with over 50,000 entries
+* Rails integration as engine
+* Removed hardcoded sitemaps.yml configuration
+
 === v0.5 // 2010-10-25
 * supports conditions and named scopes for build_sitemap via YML file
 * documentation and samples
