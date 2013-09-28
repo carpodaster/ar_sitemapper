@@ -1,5 +1,4 @@
 require 'sitemapper/engine'
-require 'sitemapper/loader'
 
 module AegisNet
   module Sitemapper
