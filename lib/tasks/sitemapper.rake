@@ -17,7 +17,7 @@ namespace :sitemapper do
     config = AegisNet::Sitemapper::Loader.load_config
     default_url_options[:host] = config["default_host"]
 
-    ActiveRecord::Migration.say_with_time "Rebuilding sitemaps from config/sitemapper.yml" do
+    ActiveRecord::Migration.say_with_time "Rebuilding sitemaps from #{AegisNet::Sitemapper.sitemap_file}" do
       AegisNet::Sitemapper::Urlset.build_all!
       AegisNet::Sitemapper::Index.create!
     end
