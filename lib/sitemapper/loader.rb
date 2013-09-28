@@ -3,6 +3,7 @@ require 'sitemapper/sitemap'
 require 'sitemapper/urlset'
 require 'sitemapper/index'
 require 'sitemapper/pinger'
+require 'sitemapper/active_record/builder'
 
 module AegisNet
   module Sitemapper
