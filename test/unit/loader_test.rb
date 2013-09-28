@@ -3,7 +3,7 @@ require 'test_helper'
 describe AegisNet::Sitemapper::Loader do
 
   it 'returns its default config path' do
-    AegisNet::Sitemapper::Loader::CONFIG_FILE.must_equal "#{Rails.root}/config/sitemaps.yml"
+    AegisNet::Sitemapper.sitemap_file.must_equal "#{Rails.root}/config/sitemaps.yml"
   end
 
   it 'loads the default config' do
