@@ -8,7 +8,7 @@ module AegisNet
   module Sitemapper
 
     class Loader
-      CONFIG_FILE = File.join(Rails.root, "config", "sitemaps.yml")
+      CONFIG_FILE = File.join(Rails.root.to_s, "config", "sitemaps.yml")
       # Loads the sitemap configuration from Rails.root/config/sitemap.yml
       def self.load_config
         # TODO verify file integrity
