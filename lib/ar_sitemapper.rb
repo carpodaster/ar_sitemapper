@@ -1,4 +1,4 @@
-require 'rails'
+require 'sitemapper/engine'
 require 'sitemapper/loader'
 
 module AegisNet
