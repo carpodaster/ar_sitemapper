@@ -1,24 +1,25 @@
-require File.join File.dirname(__FILE__), '..', 'test_helper'
+require 'test_helper'
+require 'minitest/autorun'
 
-class LoaderTest < Test::Unit::TestCase
+describe AegisNet::Sitemapper::Loader do
 
-  def test_should_return_default_config_path
-    assert_equal "#{Rails.root}/config/sitemaps.yml", AegisNet::Sitemapper::Loader::CONFIG_FILE
+  it 'returns its default config path' do
+    AegisNet::Sitemapper::Loader::CONFIG_FILE.must_equal "#{Rails.root}/config/sitemaps.yml"
   end
 
-  def test_should_load_default_config
+  it 'loads the default config' do
     config = AegisNet::Sitemapper::Loader.load_config
-    assert_not_nil config
-    assert config.is_a?(HashWithIndifferentAccess), config.inspect
+    config.wont_be_nil
+    config.must_be_kind_of HashWithIndifferentAccess
   end
 
-  def test_should_return_proc
+  it 'returns a proc' do
     proc_eval = AegisNet::Sitemapper::Loader.proc_loader "Proc.new { 'foo' }"
-    assert_equal 'foo', proc_eval
+    proc_eval.must_equal 'foo'
 
     proc_str = "Proc.new { |a,b| 'foo ' << a << ', bar ' << b}"
     proc_eval = AegisNet::Sitemapper::Loader.proc_loader(proc_str, "hello", "world")
-    assert_equal 'foo hello, bar world', proc_eval
+    proc_eval.must_equal 'foo hello, bar world'
   end
 
 end
