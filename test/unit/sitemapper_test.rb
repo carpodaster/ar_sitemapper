@@ -14,4 +14,9 @@ describe AegisNet::Sitemapper do
     end
     yielded_to.must_equal AegisNet::Sitemapper
   end
+
+  it 'can store the parsed config file' do
+    AegisNet::Sitemapper.must_respond_to 'configuration'
+    AegisNet::Sitemapper.must_respond_to 'configuration='
+  end
 end

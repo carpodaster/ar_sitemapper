@@ -13,7 +13,7 @@ module AegisNet
       def self.load_config
         # TODO verify file integrity
         erb = ERB.new(File.read(AegisNet::Sitemapper.sitemap_file))
-        $sitemapper_config ||= HashWithIndifferentAccess.new(YAML.load(StringIO.new(erb.result)))
+        AegisNet::Sitemapper.configuration ||= HashWithIndifferentAccess.new(YAML.load(StringIO.new(erb.result)))
       end
 
       # Interprets +string+ as Ruby code representing a Proc and exectutes it.
