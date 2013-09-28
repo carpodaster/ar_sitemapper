@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'minitest/spec'
 
 describe AegisNet::Sitemapper do
   it 'stores its sitemap yaml config file' do

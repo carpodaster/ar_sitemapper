@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'minitest/autorun'
 
 describe AegisNet::Sitemapper::Loader do
 
