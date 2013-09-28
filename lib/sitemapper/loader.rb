@@ -3,17 +3,17 @@ require 'sitemapper/sitemap'
 require 'sitemapper/urlset'
 require 'sitemapper/index'
 require 'sitemapper/pinger'
+require 'sitemapper/active_record/builder'
 
 module AegisNet
   module Sitemapper
 
     class Loader
-      CONFIG_FILE = File.join(Rails.root, "config", "sitemaps.yml")
       # Loads the sitemap configuration from Rails.root/config/sitemap.yml
       def self.load_config
         # TODO verify file integrity
-        erb = ERB.new(File.read(CONFIG_FILE))
-        $sitemapper_config ||= HashWithIndifferentAccess.new(YAML.load(StringIO.new(erb.result)))
+        erb = ERB.new(File.read(AegisNet::Sitemapper.sitemap_file))
+        AegisNet::Sitemapper.configuration ||= HashWithIndifferentAccess.new(YAML.load(StringIO.new(erb.result)))
       end
 
       # Interprets +string+ as Ruby code representing a Proc and exectutes it.

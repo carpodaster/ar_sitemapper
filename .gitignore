@@ -4,3 +4,6 @@ nbproject
 *~
 *.swp
 
+test/dummy/.sass-cache
+test/dummy/log/*.log
+test/dummy/db/*.sqlite3

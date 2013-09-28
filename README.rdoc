@@ -2,7 +2,7 @@
 === Low-level sitemap-building
 
 The standard approach to generate XML sitemaps for a Ruby on Rails application
-seems to be creating a special SitemapsController with rxml views and a bit
+seems to be creating a special SitemapsController with xml views and a bit
 of routes.rb magic.
 
 I used to generate sitemaps created thus via a nightly rake task to have them
@@ -15,9 +15,9 @@ Also yes, I know there are probably a gazillion projects covering this already.
 
 == Installation
 
-To add *ar_sitemapper* to your Rails project, type
+To add *ar_sitemapper* to your Rails 3 project, add it to your Gemfile:
 
-  $ ruby script/plugin install git://github.com/carpodaster/ar_sitemapper.git
+  gem 'ar_sitemapper', '~> 1.0.0'
 
 == Usage
 
@@ -158,29 +158,10 @@ sitemap are:
 
 
 === Rake task
-This is a simple rake task that loads and builds sitemaps from config/sitemaps.yml
+The gem provides a rake task to rebuild all sitemaps from its config file:
 
-  namespace :sitemapper do
-    desc "Rebuilds all sitemaps"
-    task :rebuild => [:environment, :build_from_config, :ping]
+  rake sitemapper:rebuild
 
-    desc "Rebuild everything from config/sitemapper.yml"
-    task :build_from_config => :environment do
-      include ActionController::UrlWriter
-      config = AegisNet::Sitemapper::Loader.load_config
-      default_url_options[:host] = config["default_host"]
-
-      ActiveRecord::Migration.say_with_time "Rebuilding sitemaps from config/sitemapper.yml" do
-        AegisNet::Sitemapper::Urlset.build_all!
-        AegisNet::Sitemapper::Index.create!
-      end
-    end
-
-    desc "Notifies search-engines about the index-sitemap"
-    task :ping => :environment do
-      AegisNet::Sitemapper::Pinger.ping!
-    end
-  end
 
 == .plan
 * support KML files
@@ -188,8 +169,8 @@ This is a simple rake task that loads and builds sitemaps from config/sitemaps.y
 * cleanup
 * more flexible syntax for conditions in yml file
 * guess RESTful object path and make Proc object for loc in models optional
-* Rails 3 support
+* Install a sample sitemap.yml file
 
 ---
 
-Copyright (c) 2010 Carsten Zimmermann, released under a BSD-type license
+Copyright (c) 2010-2013 Carsten Zimmermann, released under a BSD-type license
