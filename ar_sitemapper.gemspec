@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'activesupport', '>= 3.0', '< 4.0'
 
+  spec.add_development_dependency 'sqlite3'
   spec.add_development_dependency 'mocha'
   spec.add_development_dependency 'rails', '>= 3.0', '< 4.0'
 end
