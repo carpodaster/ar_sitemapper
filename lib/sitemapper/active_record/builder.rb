@@ -38,7 +38,7 @@ module AegisNet
             options = options.symbolize_keys!
             options.assert_valid_keys(Generator::VALID_GENERATOR_OPTIONS, valid_find_options)
 
-            find_options = options.reject{|pair| !valid_find_options.include?(pair.first) }
+            find_options = options.reject{|option, value| !valid_find_options.include?(option) }
             sitemap_opts = options.delete_if{|k, v| find_options.keys.include?(k)}
 
             # Extra treatment for the filename option
