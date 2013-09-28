@@ -16,6 +16,10 @@ module AegisNet
         end
       end
 
+      rake_tasks do
+        load 'tasks/sitemapper.rake'
+      end
+
     end
 
   end
