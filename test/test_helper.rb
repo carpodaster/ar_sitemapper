@@ -1,8 +1,6 @@
-class Rails
-	def self.root
-		File.join(File.dirname(__FILE__), 'support')
-	end
-end
+ENV["RAILS_ENV"] ||= 'test'
+
+require File.expand_path('../dummy/config/environment.rb', __FILE__)
 
 require 'test/unit'
 require 'rubygems'
