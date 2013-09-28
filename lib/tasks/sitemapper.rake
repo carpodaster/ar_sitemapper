@@ -9,9 +9,6 @@ namespace :sitemapper do
 
   desc "Rebuild everything from config/sitemapper.yml"
   task :rebuild => :environment do
-    include ActionController::UrlWriter
-    default_url_options[:host] = 'www.example.com'
-
     ActiveRecord::Migration.say_with_time "Rebuilding sitemaps from config/sitemapper.yml" do
       AegisNet::Sitemapper::Urlset.build_all!
       AegisNet::Sitemapper::Index.create!
