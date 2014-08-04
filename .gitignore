@@ -7,3 +7,4 @@ nbproject
 test/dummy/.sass-cache
 test/dummy/log/*.log
 test/dummy/db/*.sqlite3
+Gemfile.lock
