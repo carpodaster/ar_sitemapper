@@ -9,5 +9,6 @@ require 'bundler'
 Bundler.require(:default, :development)
 
 require 'erb'
+require 'mocha/setup'
 
 Dir.glob(File.join(File.dirname(__FILE__) + 'support', 'app', '*') {|file| require file})
