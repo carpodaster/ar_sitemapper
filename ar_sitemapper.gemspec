@@ -23,4 +23,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'sqlite3'
   spec.add_development_dependency 'rails', '>= 3.0', '< 5.0'
   spec.add_development_dependency 'simplecov'
+  spec.add_development_dependency 'webmock'
 end

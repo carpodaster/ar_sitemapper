@@ -17,6 +17,7 @@ old_minitest = Rails::VERSION::STRING < '4.1.0'
 
 require (old_minitest ? 'test/unit' : 'minitest')
 require 'minitest/autorun'
+require 'webmock/minitest'
 
 require 'erb'
 require 'mocha/setup'
