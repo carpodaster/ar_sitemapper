@@ -1,4 +1,4 @@
-# ActiveRecord Sitemapper
+# ActiveRecord Sitemapper [![Build Status](https://travis-ci.org/carpodaster/ar_sitemapper.svg?branch=master)](https://travis-ci.org/carpodaster/ar_sitemapper)
 ## Low-level sitemap-building
 
 The standard approach to generate XML sitemaps for a Ruby on Rails application
@@ -8,7 +8,7 @@ of routes.rb magic.
 I used to generate sitemaps created thus via a nightly rake task to have them
 cached and delivered statically by Apache. That felt wrong, I wanted a more
 "low-level" approach. Actually, as low-level as possible and I ended up at
-ActiveRecord::Base: this plugin enhances your ActiveRecord model to export 
+ActiveRecord::Base: this plugin enhances your ActiveRecord model to export
 its data to a sitemap in an intuitive way.
 
 Also yes, I know there are probably a gazillion projects covering this already.
