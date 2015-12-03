@@ -1,5 +1,10 @@
 ENV["RAILS_ENV"] ||= 'test'
 
+if ENV['COVERAGE']
+  require 'simplecov'
+  SimpleCov.start { add_filter '/test/' }
+end
+
 require File.expand_path('../dummy/config/environment.rb', __FILE__)
 
 require 'rubygems'
